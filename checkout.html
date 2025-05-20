@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body onload="loadTotal()">
+
+  <h1>Checkout Page</h1>
+
+  <form id="checkout-form">
+    <label>Name:</label>
+    <input type="text" id="name" required><br><br>
+
+    <label>Email:</label>
+    <input type="email" id="email" required><br><br>
+
+    <label>Address:</label><br>
+    <textarea id="address" rows="4" required></textarea><br><br>
+
+    <h3 id="total">Total: ₹0</h3>
+
+    <button type="button" onclick="payNow()">Pay Now</button>
+  </form>
+
+  <script>
+    let total = 0;
+
+    function loadTotal() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      total = cart.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById("total").innerText = `Total: ₹${total}`;
+    }
+
+    function payNow() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+
+      if (!name || !email || !address) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const options = {
+        key: "YOUR_RAZORPAY_KEY", // 👈 Replace this with your Razorpay key
+        amount: total * 100, // Convert ₹ to paisa
+        currency: "INR",
+        name: "Nailpolish Store",
+        description: "Order Payment",
+        handler: function (response) {
+          alert("Payment successful! ID: " + response.razorpay_payment_id);
+
+          // Clear cart after payment
+          localStorage.removeItem("cart");
+          window.location.href = "thankyou.html"; // Optional: create this page
+        },
+        prefill: {
+          name: name,
+          email: email
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+
+</body>
+</html>

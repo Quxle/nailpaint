@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gleam & Glow Nail Polish</title>
+    <style>
+        :root {
+            --main-pink: #ff6b9b;
+            --light-pink: #ffe0e9;
+            --dark-pink: #e64980;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo-image {
+            max-height: 60px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--main-pink);
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--main-pink);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .product-section {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 40px 0;
+            gap: 30px;
+        }
+        
+        .product-gallery {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .main-image {
+            background-color: var(--light-pink);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            height: 400px;
+        }
+        
+        .main-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+        }
+        
+        .main-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail:hover {
+            transform: translateY(-3px);
+        }
+        
+        .thumbnail.active {
+            border-color: var(--main-pink);
+        }
+        
+        .product-details {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .product-title {
+            font-size: 32px;
+            color: var(--dark-pink);
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .original-price {
+            font-size: 18px;
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .discounted-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--dark-pink);
+        }
+        
+        .discount-badge {
+            background-color: var(--main-pink);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .usp-list {
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        .usp-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .usp-list li:before {
+            content: "✓";
+            color: var(--main-pink);
+            font-weight: bold;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--main-pink);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(230, 73, 128, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-pink);
+            color: var(--dark-pink);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--dark-pink);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(230, 73, 128, 0.3);
+        }
+        
+        .reviews-section {
+            margin: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--dark-pink);
+            text-align: center;
+        }
+        
+        .reviews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .review {
+            background-color: var(--light-gray);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .review:hover {
+            transform: translateY(-5px);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-pink);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--main-pink);
+        }
+        
+        .reviewer-name {
+            font-weight: bold;
+        }
+        
+        .stars {
+            color: gold;
+            margin-top: 5px;
+        }
+        
+        .review-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1000;
+            max-width: 300px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        
+        .popup.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--dark-gray);
+        }
+        
+        .popup-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--dark-pink);
+        }
+        
+        .popup-content {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            background-color: var(--light-pink);
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-title {
+            color: var(--dark-pink);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--main-pink);
+        }
+        
+        .feature-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-item {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: var(--light-pink);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .feature-item:hover .feature-image img {
+            transform: scale(1.1);
+        }
+        
+        .feature-title {
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .feature-description {
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .product-section {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-icon {
+                display: block;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.6s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <img src="fine-touch-logo-removebg-preview.png" alt="Brand Logo" class="logo-image">
+                </div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Products</a>
+                    <a href="#">Collections</a>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                </div>
+                <a class="cart-icon" href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+
+              
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="product-section">
+            <div class="product-gallery fade-in">
+                <div class="main-image">
+                    <img id="main-product-image" src="fine-touch-blackbackground.png" alt="Nail Polish Main View" />
+                </div>
+                <div class="thumbnail-images">
+                    <img src="ChatGPT Image May 16, 2025, 03_44_47 PM.png" alt="Nail Polish Front View" class="thumbnail active" onclick="changeImage(this, 'fine-touch-blackbackground.png')">
+                    <img src="fine-touch-blackbackground.png" alt="Nail Polish Application View" class="thumbnail" onclick="changeImage(this, '/api/placeholder/400/400?color=pink')">
+                    <img src="/api/placeholder/100/100?color=red" alt="Nail Polish Side View" class="thumbnail" onclick="changeImage(this, '/api/placeholder/400/400?color=red')">
+                    <img src="/api/placeholder/100/100?color=purple" alt="Nail Polish Package View" class="thumbnail" onclick="changeImage(this, '/api/placeholder/400/400?color=purple')">
+                </div>
+            </div>
+            
+            <div class="product-details">
+                <h1 class="product-title slide-in">Gleam & Glow Rose Petal Nail Polish</h1>
+                
+                <div class="price-container slide-in delay-1">
+                    <span class="original-price">$12.99</span>
+                    <span class="discounted-price">$8.99</span>
+                    <span class="discount-badge">30% OFF</span>
+                </div>
+                
+                <ul class="usp-list slide-in delay-2">
+                    <li>Cruelty-free formula - Never tested on animals</li>
+                    <li>Up to 70% less chemicals than conventional nail polishes</li>
+                    <li>Nourishing ingredients that promote nail health</li>
+                    <li>Long-lasting color with chip-resistant finish</li>
+                    <li>Fast-drying formula saves you time</li>
+                </ul>
+                
+                <div class="action-buttons slide-in delay-3">
+                    <button id="order-now" class="btn btn-primary">Order Now</button>
+                    <button class="btn btn-secondary" onclick="addToCart('np001', 'Red Nailpolish', 49)">Add to Cart</button>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-features-section fade-in">
+            <h2 class="section-title">Why Choose Our Nail Polish</h2>
+            <div class="feature-images">
+                <div class="feature-item">
+                    <div class="feature-image">
+                        <img src="/api/placeholder/400/300" alt="Cruelty-Free Formula">
+                    </div>
+                    <h3 class="feature-title">Cruelty-Free Formula</h3>
+                    <p class="feature-description">Our nail polishes are never tested on animals. We're committed to ethical beauty practices.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-image">
+                        <img src="/api/placeholder/400/300" alt="Less Chemicals">
+                    </div>
+                    <h3 class="feature-title">70% Less Chemicals</h3>
+                    <p class="feature-description">Our formulation contains up to 70% less harmful chemicals compared to conventional nail polishes.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-image">
+                        <img src="/api/placeholder/400/300" alt="Nail Health">
+                    </div>
+                    <h3 class="feature-title">Promotes Nail Health</h3>
+                    <p class="feature-description">Enriched with vitamins and minerals that strengthen and nourish your nails while you wear it.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="reviews-section fade-in">
+            <h2 class="section-title">Customer Reviews</h2>
+            <div class="reviews">
+                <div class="review">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">SM</div>
+                        <div>
+                            <div class="reviewer-name">Sarah M.</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        "I love this nail polish! The color is gorgeous and it lasts for over a week without chipping. The fact that it's cruelty-free and has fewer chemicals makes it a guilt-free purchase. Will definitely buy more colors!"
+                    </div>
+                </div>
+                
+                <div class="review">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">JL</div>
+                        <div>
+                            <div class="reviewer-name">Jennifer L.</div>
+                            <div class="stars">★★★★☆</div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        "My nails used to break easily after using regular nail polish, but since switching to Gleam & Glow, they've been much stronger. The polish applies evenly and the color is vibrant. Only giving 4 stars because it takes a bit longer to dry than claimed."
+                    </div>
+                </div>
+                
+                <div class="review">
+                    <div class="review-header">
+                        <div class="reviewer-avatar">RK</div>
+                        <div>
+                            <div class="reviewer-name">Riya K.</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        "As someone with sensitive skin, finding a nail polish that doesn't cause irritation has been challenging. This one is perfect! No strong chemical smell and my nails actually look healthier after using it. Plus, the packaging is so cute!"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="discount-popup" class="popup">
+        <span class="popup-close">&times;</span>
+        <h3 class="popup-title">Special Offer!</h3>
+        <div class="popup-content">
+            Get 15% off on your purchase today! Use code <strong>FLASH15</strong> at checkout.
+        </div>
+        <button class="btn btn-primary">Apply Coupon</button>
+    </div>
+    
+    <script>
+        // Image gallery functionality with smooth animation
+        function changeImage(element, imageSrc) {
+            // Get the main image element
+            const mainImage = document.getElementById('main-product-image');
+            
+            // Create fade-out effect
+            mainImage.style.opacity = '0';
+            mainImage.style.transform = 'scale(0.95)';
+            
+            // After a short delay, change the image and fade it back in with a smooth animation
+            setTimeout(function() {
+                mainImage.src = imageSrc;
+                mainImage.style.opacity = '1';
+                mainImage.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Update active thumbnail
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(function(thumb) {
+                thumb.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+        
+        // Display popup after 3 seconds
+        setTimeout(function() {
+            document.getElementById('discount-popup').classList.add('active');
+        }, 3000);
+        
+        // Close popup
+        document.querySelector('.popup-close').addEventListener('click', function() {
+            document.getElementById('discount-popup').classList.remove('active');
+        });
+        
+        // Add to cart functionality
+        let cartCount = 0;
+        document.getElementById('add-to-cart').addEventListener('click', function() {
+            cartCount++;
+            document.querySelector('.cart-count').textContent = cartCount;
+            
+            // Show confirmation animation
+            this.textContent = 'Added!';
+            this.style.backgroundColor = '#4CAF50';
+            
+            setTimeout(() => {
+                this.textContent = 'Add to Cart';
+                this.style.backgroundColor = '';
+            }, 1500);
+        });
+        
+        // Order now button - redirect to checkout page
+        document.getElementById('order-now').addEventListener('click', function() {
+            // In a real scenario, this would redirect to a checkout page
+            alert('Redirecting to checkout...');
+            // window.location.href = 'checkout.html';
+        });
+    </script>
+
+
+
+
+
+
+<script src="script.js"></script>
+</body>
+</html>
